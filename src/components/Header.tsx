@@ -8,9 +8,9 @@ import { User } from '@/types';
 import { UserAvatar } from './UserAvatar';
 
 const navLinks = [
-  { href: '/', label: 'Главная' },
-  { href: '/water-bodies', label: 'Озёра' },
-  { href: '/profile', label: 'Личный кабинет' },
+  { href: '/', label: 'Обзор' },
+  { href: '/water-bodies', label: 'Водоёмы' },
+  { href: '/profile', label: 'Аккаунт' },
 ];
 
 export function Header({ user }: { user: User | null }) {
@@ -21,22 +21,26 @@ export function Header({ user }: { user: User | null }) {
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <header className="site-header">
+    <header className="site-header modern-header">
       <div className="site-header__inner">
+
+        {/* LOGO */}
         <Link href="/" className="brand-block" onClick={closeMenu}>
-          <span className="brand-badge">LC</span>
+          <span className="brand-badge">AT</span>
 
           <div className="brand-copy">
-            <div className="brand-title">Lakes Client</div>
-            <div className="brand-subtitle">Мониторинг озёр и показателей воды</div>
+            <div className="brand-title">AquaTrack</div>
+            <div className="brand-subtitle">
+              Аналитика и мониторинг водных ресурсов
+            </div>
           </div>
         </Link>
 
+        {/* BURGER */}
         <button
           type="button"
           className={`burger ${isOpen ? 'is-open' : ''}`}
           aria-label={isOpen ? 'Закрыть меню' : 'Открыть меню'}
-          aria-expanded={isOpen}
           onClick={() => setIsOpen((prev) => !prev)}
         >
           <span />
@@ -44,12 +48,13 @@ export function Header({ user }: { user: User | null }) {
           <span />
         </button>
 
-        <nav className={`header-nav ${isOpen ? 'open' : ''}`} aria-label="Основная навигация">
+        {/* NAV */}
+        <nav className={`header-nav ${isOpen ? 'open' : ''}`}>
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={pathname === link.href ? 'is-active' : ''}
+              className={pathname === link.href ? 'is-active nav-modern-active' : 'nav-modern'}
               onClick={closeMenu}
             >
               {link.label}
@@ -57,21 +62,27 @@ export function Header({ user }: { user: User | null }) {
           ))}
         </nav>
 
+        {/* USER */}
         <div className={`header-user ${isOpen ? 'open' : ''}`}>
-          <Link href="/profile" className="profile-chip" onClick={closeMenu}>
+
+          <Link href="/profile" className="profile-chip modern-profile" onClick={closeMenu}>
             <UserAvatar
               name={user?.login || user?.email}
               avatarUrl={user?.avatarUrl}
-              size={40}
+              size={42}
             />
             <div>
-              <div className="profile-chip__name">{user?.login || 'Пользователь'}</div>
-              <div className="profile-chip__meta">{user?.email || 'Открыть профиль'}</div>
+              <div className="profile-chip__name">
+                {user?.login || 'Гость'}
+              </div>
+              <div className="profile-chip__meta">
+                {user?.email || 'Открыть профиль'}
+              </div>
             </div>
           </Link>
 
           <button
-            className="btn secondary"
+            className="btn logout-modern"
             onClick={() => {
               authStorage.clear();
               router.replace('/login');
@@ -80,6 +91,7 @@ export function Header({ user }: { user: User | null }) {
             Выйти
           </button>
         </div>
+
       </div>
     </header>
   );
